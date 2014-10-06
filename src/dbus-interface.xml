@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- This description is licensed to MiX Telematics 
+     
+     DBUS api to provide a custom Ofono provider plugin with 
+     one or more valid GPRS internet contexts            -->
+
+<!DOCTYPE node PUBLIC
+  "-//freedesktop//DTD D-Bus Object Introspection 1.0//EN"
+  "http://standards.freedesktop.org/dbus/1.0/introspect.dtd">
+
+<node>
+  <interface name="com.mixtelematics.ContextManager">
+    <method name="getContext">
+      <arg type="i" name="mcc" direction="in"/>
+      <arg type="i" name="mnc" direction="in"/>
+      <arg type="i" name="spn" direction="in"/>
+      <arg type="i" name="num" direction="out"/>
+      <arg type="a(a{sv})" name="contexts" direction="out"/>
+    </method>
+  </interface>
+</node>
