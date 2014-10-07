@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- This description provides a proprietary MiX Telematics      
+     DBUS api -->
+
+<!DOCTYPE node PUBLIC
+  "-//freedesktop//DTD D-Bus Object Introspection 1.0//EN"
+  "http://standards.freedesktop.org/dbus/1.0/introspect.dtd">
+
+<node>
+  <interface name="com.mixtelematics.mesa.parameters">
+
+    <method name="getParamter">
+      <arg type="i" name="id" direction="in"/>
+      <arg type="a(a{sv})" name="data" direction="out"/>
+    </method>
+
+    <method name="setParamter">
+      <arg type="i" name="id" direction="in"/>
+      <arg type="a(a{sv})" name="data" direction="in"/>
+    </method>
+
+  </interface>
+</node>

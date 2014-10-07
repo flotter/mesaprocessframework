@@ -10,13 +10,15 @@
   "http://standards.freedesktop.org/dbus/1.0/introspect.dtd">
 
 <node>
-  <interface name="com.mixtelematics.ContextManager">
-    <method name="getContext">
-      <arg type="i" name="mcc" direction="in"/>
-      <arg type="i" name="mnc" direction="in"/>
-      <arg type="i" name="spn" direction="in"/>
-      <arg type="i" name="num" direction="out"/>
-      <arg type="a(a{sv})" name="contexts" direction="out"/>
+  <interface name="com.mixtelematics.connectionmanager">
+
+    <method name="getStatus">
+      <arg type="a(a{sv})" name="state" direction="out"/>
     </method>
+
+    <method name="reportCommsError">
+      <arg type="s" name="reporter" direction="in"/>
+    </method>
+
   </interface>
 </node>
