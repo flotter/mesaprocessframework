@@ -5,6 +5,9 @@ AM_INIT_AUTOMAKE(foreign subdir-objects)
 # The name of the MESA process (e.g. replace x with connectionmanager)
 AC_SUBST(PROCESSNAME,x)
 
+# The full path to the MESA framework
+AC_SUBST(MESAPATH)
+
 AC_CONFIG_SRCDIR(configure.ac)
 AC_CONFIG_HEADERS(config.h)  
 PKG_CHECK_MODULES(GLIB, glib-2.0)   

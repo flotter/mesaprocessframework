@@ -610,6 +610,7 @@ GLIB_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+MESAPATH
 PROCESSNAME
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
@@ -2416,6 +2417,9 @@ fi
 
 # The name of the MESA process (e.g. replace x with connectionmanager)
 PROCESSNAME=x
+
+
+# The full path to the MESA framework
 
 
 
