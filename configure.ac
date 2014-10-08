@@ -13,5 +13,5 @@ AC_CONFIG_HEADERS(config.h)
 PKG_CHECK_MODULES(GLIB, glib-2.0)   
 PKG_CHECK_MODULES(GIO, gio-unix-2.0)
 AC_PROG_CC
-AC_CONFIG_FILES(Makefile src/Makefile src/dbus/Makefile)
+AC_CONFIG_FILES(Makefile src/Makefile src/dbus-process/Makefile src/mesa/Makefile)
 AC_OUTPUT

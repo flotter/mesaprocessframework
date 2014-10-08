@@ -285,7 +285,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = . src
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -671,10 +671,13 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
+clean-am: clean-generic mostlyclean-am
+
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-hdr distclean-tags
+distclean-am: clean-am distclean-generic distclean-hdr distclean-local \
+	distclean-tags
 
 dvi: dvi-recursive
 
@@ -743,24 +746,28 @@ uninstall-am:
 	cscope cscopelist-am ctags ctags-am dist dist-all dist-bzip2 \
 	dist-gzip dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
 	distcheck distclean distclean-generic distclean-hdr \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am
+	distclean-local distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-am uninstall uninstall-am
 
 
 all-am:
-	test ! -n "$(MESAPATH)" || test ! -d "$(MESAPATH)" || ln -s $(MESAPATH) mesa
+	test ! -n "$(MESAPATH)" || test ! -d "$(MESAPATH)" || test -d mesa || ln -r -s $(MESAPATH) mesa
+
 	test -d mesa || git clone -b Develop https://MixFirmwareBuild:M1Xbu1ld3r@github.com/MiXTelematics/MESA mesa/
 
-clean-am: 
-	test ! -d mesa || rm -rf mesa
+	test ! -d mesa || test -d "src/mesa/dbus" || ln -s -r $(MESAPATH)/targets/linux/services/dbus/gdbusCodeGen src/mesa/dbus
+
+distclean-local: 
+	test ! -d mesa || rm -rf mesa *~
+	test ! -d "src/mesa/dbus" || rm -rf src/mesa/dbus
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

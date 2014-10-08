@@ -91,8 +91,9 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_mesa_process_@PROCESSNAME@_OBJECTS = dbus/dbusProcessApi.$(OBJEXT) \
-	dbus/dbusMesaApi.$(OBJEXT) main.$(OBJEXT)
+am_mesa_process_@PROCESSNAME@_OBJECTS =  \
+	dbus-process/dbusProcessApi.$(OBJEXT) \
+	mesa/dbusMesaParameterApi.$(OBJEXT) main.$(OBJEXT)
 mesa_process_@PROCESSNAME@_OBJECTS =  \
 	$(am_mesa_process_@PROCESSNAME@_OBJECTS)
 mesa_process_@PROCESSNAME@_LDADD = $(LDADD)
@@ -286,9 +287,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-mesa_process_@PROCESSNAME@_SOURCES = dbus/dbusProcessApi.c dbus/dbusProcessApi.h dbus/dbusMesaApi.c dbus/dbusMesaApi.h main.c
+mesa_process_@PROCESSNAME@_SOURCES = dbus-process/dbusProcessApi.c dbus-process/dbusProcessApi.h mesa/dbusMesaParameterApi.c mesa/dbusMesaParameterApi.h main.c
 AM_CFLAGS = $(GLIB_CFLAGS) $(GIO_CFLAGS)
-SUBDIRS = dbus
+SUBDIRS = dbus-process mesa
 all: all-recursive
 
 .SUFFIXES:
@@ -365,16 +366,22 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-dbus/$(am__dirstamp):
-	@$(MKDIR_P) dbus
-	@: > dbus/$(am__dirstamp)
-dbus/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) dbus/$(DEPDIR)
-	@: > dbus/$(DEPDIR)/$(am__dirstamp)
-dbus/dbusProcessApi.$(OBJEXT): dbus/$(am__dirstamp) \
-	dbus/$(DEPDIR)/$(am__dirstamp)
-dbus/dbusMesaApi.$(OBJEXT): dbus/$(am__dirstamp) \
-	dbus/$(DEPDIR)/$(am__dirstamp)
+dbus-process/$(am__dirstamp):
+	@$(MKDIR_P) dbus-process
+	@: > dbus-process/$(am__dirstamp)
+dbus-process/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) dbus-process/$(DEPDIR)
+	@: > dbus-process/$(DEPDIR)/$(am__dirstamp)
+dbus-process/dbusProcessApi.$(OBJEXT): dbus-process/$(am__dirstamp) \
+	dbus-process/$(DEPDIR)/$(am__dirstamp)
+mesa/$(am__dirstamp):
+	@$(MKDIR_P) mesa
+	@: > mesa/$(am__dirstamp)
+mesa/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) mesa/$(DEPDIR)
+	@: > mesa/$(DEPDIR)/$(am__dirstamp)
+mesa/dbusMesaParameterApi.$(OBJEXT): mesa/$(am__dirstamp) \
+	mesa/$(DEPDIR)/$(am__dirstamp)
 
 mesa-process-@PROCESSNAME@$(EXEEXT): $(mesa_process_@PROCESSNAME@_OBJECTS) $(mesa_process_@PROCESSNAME@_DEPENDENCIES) $(EXTRA_mesa_process_@PROCESSNAME@_DEPENDENCIES) 
 	@rm -f mesa-process-@PROCESSNAME@$(EXEEXT)
@@ -382,14 +389,15 @@ mesa-process-@PROCESSNAME@$(EXEEXT): $(mesa_process_@PROCESSNAME@_OBJECTS) $(mes
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f dbus/*.$(OBJEXT)
+	-rm -f dbus-process/*.$(OBJEXT)
+	-rm -f mesa/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@dbus/$(DEPDIR)/dbusMesaApi.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@dbus/$(DEPDIR)/dbusProcessApi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@dbus-process/$(DEPDIR)/dbusProcessApi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@mesa/$(DEPDIR)/dbusMesaParameterApi.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -595,18 +603,20 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f dbus/$(DEPDIR)/$(am__dirstamp)
-	-rm -f dbus/$(am__dirstamp)
+	-rm -f dbus-process/$(DEPDIR)/$(am__dirstamp)
+	-rm -f dbus-process/$(am__dirstamp)
+	-rm -f mesa/$(DEPDIR)/$(am__dirstamp)
+	-rm -f mesa/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf ./$(DEPDIR) dbus/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) dbus-process/$(DEPDIR) mesa/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -652,7 +662,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf ./$(DEPDIR) dbus/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) dbus-process/$(DEPDIR) mesa/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -673,19 +683,22 @@ uninstall-am: uninstall-binPROGRAMS
 .MAKE: $(am__recursive_targets) install-am install-strip
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am check \
-	check-am clean clean-binPROGRAMS clean-generic cscopelist-am \
-	ctags ctags-am distclean distclean-compile distclean-generic \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS
+	check-am clean clean-binPROGRAMS clean-generic clean-local \
+	cscopelist-am ctags ctags-am distclean distclean-compile \
+	distclean-generic distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS
 
+
+clean-local:
+	rm -rf *~ *.o 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
