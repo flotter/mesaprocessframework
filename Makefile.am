@@ -9,9 +9,9 @@ all-am:
 	test -d mesa || git clone -b Develop https://MixFirmwareBuild:M1Xbu1ld3r@github.com/MiXTelematics/MESA mesa/
 	
 	## Map all the relavant MESA folders into our process
-	test ! -d mesa || test -d "src/mesa/dbus-mesa-api" || ln -s -r $(MESAPATH)/targets/linux/services/dbus/gdbusCodeGen src/mesa/dbus-mesa-api
-	test ! -d mesa || test -d "src/mesa/parameter" || ln -s -r $(MESAPATH)/mesa/services/parameter src/mesa/parameter
-	test ! -d mesa || test -d "src/mesa/defines" || ln -s -r $(MESAPATH)/mesa/defines src/mesa/defines
+	test ! -d mesa || test -d "src/mesa/dbus-mesa-api" || ln -s -r mesa/targets/linux/services/dbus/gdbusCodeGen src/mesa/dbus-mesa-api
+	test ! -d mesa || test -d "src/mesa/parameter" || ln -s -r mesa/mesa/services/parameter src/mesa/parameter
+	test ! -d mesa || test -d "src/mesa/defines" || ln -s -r mesa/mesa/defines src/mesa/defines
 	
 
 
