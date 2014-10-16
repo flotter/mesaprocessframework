@@ -13,7 +13,7 @@
   <interface name="com.mixtelematics.connectionmanager">
 
     <method name="getStatus">
-      <arg type="a(a{sv})" name="state" direction="out"/>
+      <arg type="a{sv}" name="state" direction="out"/>
     </method>
 
     <method name="reportCommsError">

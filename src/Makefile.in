@@ -92,8 +92,12 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_mesa_process_@PROCESSNAME@_OBJECTS =  \
-	dbus-process/dbusProcessApi.$(OBJEXT) \
-	mesa/dbusMesaParameterApi.$(OBJEXT) main.$(OBJEXT)
+	dbus-process-api/dbusProcessApi.$(OBJEXT) \
+	mesa/dbusMesaParameterApi.$(OBJEXT) main.$(OBJEXT) \
+	dbusMesaInterface.$(OBJEXT) dbusProcessInterface.$(OBJEXT) \
+	dbusSvc.$(OBJEXT) \
+	mesa/parameter/providers/paramProviderSystem.$(OBJEXT) \
+	paramSvc.$(OBJEXT)
 mesa_process_@PROCESSNAME@_OBJECTS =  \
 	$(am_mesa_process_@PROCESSNAME@_OBJECTS)
 mesa_process_@PROCESSNAME@_LDADD = $(LDADD)
@@ -287,9 +291,20 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-mesa_process_@PROCESSNAME@_SOURCES = dbus-process/dbusProcessApi.c dbus-process/dbusProcessApi.h mesa/dbusMesaParameterApi.c mesa/dbusMesaParameterApi.h main.c
-AM_CFLAGS = $(GLIB_CFLAGS) $(GIO_CFLAGS)
-SUBDIRS = dbus-process mesa
+mesa_process_@PROCESSNAME@_SOURCES =  \
+	dbus-process-api/dbusProcessApi.c \
+	dbus-process-api/dbusProcessApi.h mesa/dbusMesaParameterApi.c \
+	mesa/dbusMesaParameterApi.h main.c dbusMesaInterface.c \
+	dbusMesaInterface.h dbusProcessInterface.c \
+	dbusProcessInterface.h dbusSvc.c dbusSvc.h \
+	mesa/parameter/providers/paramProviderSystem.c \
+	mesa/parameter/providers/paramProviderSystem.h paramSvc.h \
+	paramSvc.c
+AM_CFLAGS = $(GLIB_CFLAGS) $(GIO_CFLAGS) \
+	-DPROCESSNAME=mesa-process-@PROCESSNAME@ -Imesa -Imesa/defines \
+	-Imesa/dbus-mesa-api -Idbus-process-api \
+	-Imesa/parameter/providers
+SUBDIRS = dbus-process-api mesa
 all: all-recursive
 
 .SUFFIXES:
@@ -366,14 +381,15 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-dbus-process/$(am__dirstamp):
-	@$(MKDIR_P) dbus-process
-	@: > dbus-process/$(am__dirstamp)
-dbus-process/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) dbus-process/$(DEPDIR)
-	@: > dbus-process/$(DEPDIR)/$(am__dirstamp)
-dbus-process/dbusProcessApi.$(OBJEXT): dbus-process/$(am__dirstamp) \
-	dbus-process/$(DEPDIR)/$(am__dirstamp)
+dbus-process-api/$(am__dirstamp):
+	@$(MKDIR_P) dbus-process-api
+	@: > dbus-process-api/$(am__dirstamp)
+dbus-process-api/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) dbus-process-api/$(DEPDIR)
+	@: > dbus-process-api/$(DEPDIR)/$(am__dirstamp)
+dbus-process-api/dbusProcessApi.$(OBJEXT):  \
+	dbus-process-api/$(am__dirstamp) \
+	dbus-process-api/$(DEPDIR)/$(am__dirstamp)
 mesa/$(am__dirstamp):
 	@$(MKDIR_P) mesa
 	@: > mesa/$(am__dirstamp)
@@ -382,6 +398,15 @@ mesa/$(DEPDIR)/$(am__dirstamp):
 	@: > mesa/$(DEPDIR)/$(am__dirstamp)
 mesa/dbusMesaParameterApi.$(OBJEXT): mesa/$(am__dirstamp) \
 	mesa/$(DEPDIR)/$(am__dirstamp)
+mesa/parameter/providers/$(am__dirstamp):
+	@$(MKDIR_P) mesa/parameter/providers
+	@: > mesa/parameter/providers/$(am__dirstamp)
+mesa/parameter/providers/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) mesa/parameter/providers/$(DEPDIR)
+	@: > mesa/parameter/providers/$(DEPDIR)/$(am__dirstamp)
+mesa/parameter/providers/paramProviderSystem.$(OBJEXT):  \
+	mesa/parameter/providers/$(am__dirstamp) \
+	mesa/parameter/providers/$(DEPDIR)/$(am__dirstamp)
 
 mesa-process-@PROCESSNAME@$(EXEEXT): $(mesa_process_@PROCESSNAME@_OBJECTS) $(mesa_process_@PROCESSNAME@_DEPENDENCIES) $(EXTRA_mesa_process_@PROCESSNAME@_DEPENDENCIES) 
 	@rm -f mesa-process-@PROCESSNAME@$(EXEEXT)
@@ -389,15 +414,21 @@ mesa-process-@PROCESSNAME@$(EXEEXT): $(mesa_process_@PROCESSNAME@_OBJECTS) $(mes
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f dbus-process/*.$(OBJEXT)
+	-rm -f dbus-process-api/*.$(OBJEXT)
 	-rm -f mesa/*.$(OBJEXT)
+	-rm -f mesa/parameter/providers/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbusMesaInterface.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbusProcessInterface.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dbusSvc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@dbus-process/$(DEPDIR)/dbusProcessApi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/paramSvc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@dbus-process-api/$(DEPDIR)/dbusProcessApi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@mesa/$(DEPDIR)/dbusMesaParameterApi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@mesa/parameter/providers/$(DEPDIR)/paramProviderSystem.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -603,10 +634,12 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-rm -f dbus-process/$(DEPDIR)/$(am__dirstamp)
-	-rm -f dbus-process/$(am__dirstamp)
+	-rm -f dbus-process-api/$(DEPDIR)/$(am__dirstamp)
+	-rm -f dbus-process-api/$(am__dirstamp)
 	-rm -f mesa/$(DEPDIR)/$(am__dirstamp)
 	-rm -f mesa/$(am__dirstamp)
+	-rm -f mesa/parameter/providers/$(DEPDIR)/$(am__dirstamp)
+	-rm -f mesa/parameter/providers/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -616,7 +649,7 @@ clean: clean-recursive
 clean-am: clean-binPROGRAMS clean-generic clean-local mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf ./$(DEPDIR) dbus-process/$(DEPDIR) mesa/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) dbus-process-api/$(DEPDIR) mesa/$(DEPDIR) mesa/parameter/providers/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -662,7 +695,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf ./$(DEPDIR) dbus-process/$(DEPDIR) mesa/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) dbus-process-api/$(DEPDIR) mesa/$(DEPDIR) mesa/parameter/providers/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
